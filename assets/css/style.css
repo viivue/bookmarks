@@ -1,4 +1,62 @@
-* {margin:0; padding:0; box-sizing:border-box; border:none;}
+* {margin:0; padding:0; box-sizing:border-box; border:none; font-family:"Source Code Pro", monospace;}
+body {font-size:16px;}
 
-main {display:flex; flex-wrap:wrap;}
-article {flex-grow:1; padding:10px 20px; font-size:25px; text-align:center;}
+
+main {max-width:1024px; margin:0 auto; padding:100px 20px;}
+main > div:not(:last-child) {margin-bottom:50px;}
+
+
+/* Labels */
+ul.labels {list-style:none; margin:-5px; display:flex; flex-wrap:wrap; justify-content:center;}
+ul.labels li {padding:5px;}
+ul.labels li a {
+    display:flex; align-items:center; justify-content:center;
+    border-radius:40px; min-height:30px; padding:5px 15px;
+    text-decoration:none;
+}
+
+/* Contrast background color */
+.label {
+    --label-r:0;
+    --label-g:0;
+    --label-b:0;
+
+    --lightness-threshold:0.453;
+    --perceived-lightness:calc(((var(--label-r) * 0.2126) + (var(--label-g) * 0.7152) + (var(--label-b) * 0.0722)) / 255);
+    --lightness-switch:max(0, min(calc((var(--perceived-lightness) - var(--lightness-threshold)) * -1000), 1));
+
+    background:rgb(var(--label-r), var(--label-g), var(--label-b));
+    color:hsl(0, 0%, calc(var(--lightness-switch) * 100%));
+}
+
+/* Bookmark items */
+ul.bookmarks li {display:flex; flex-wrap:wrap; position:relative; padding-left:15px;}
+ul.bookmarks li:not(:last-child) {margin-bottom:10px;}
+ul.bookmarks li:before {
+    content:""; position:absolute; top:.6em; left:0;
+    width:5px; height:5px; border-radius:50%;
+    background:#000; opacity:.5;
+}
+ul.bookmarks li a {margin-right:1em; font-size:1.1em;}
+
+/* Button underline */
+[class*="btn_underline"] {position:relative; color:#d5af13; text-decoration:none; font-weight:600;}
+[class*="btn_underline"]:before {
+    content:""; position:absolute; bottom:0; left:0; right:0;
+    height:2px; border-radius:2px; background:#d5af13; opacity:0;
+}
+[class*="btn_underline"]:hover, [class*="btn_underline"]:focus {
+    color:#d5af13; text-decoration:none;
+}
+[class*="btn_underline"]:hover:before {
+    animation:btn-underline-line 1s infinite;
+    opacity:1;
+}
+
+/* button underline > keyframes */
+@keyframes btn-underline-line {
+    20% {left:0; right:0;}
+    49% {left:100%; right:0;}
+    50% {right:100%; left:0;}
+    80% {right:0;}
+}
