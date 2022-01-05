@@ -1,8 +1,8 @@
 * {margin:0; padding:0; box-sizing:border-box; border:none; font-family:"Source Code Pro", monospace;}
-body {font-size:16px;}
+body {font-size:16px; min-height:100vh;}
 
 
-main {max-width:1024px; margin:0 auto; padding:100px 20px;}
+main {max-width:1024px; margin:0 auto; padding:100px 20px; position:relative; z-index:1;}
 main > div:not(:last-child) {margin-bottom:50px;}
 
 
@@ -12,8 +12,10 @@ ul.labels li {padding:5px;}
 ul.labels li a {
     display:flex; align-items:center; justify-content:center;
     border-radius:40px; min-height:30px; padding:5px 15px;
-    text-decoration:none;
+    text-decoration:none; transition:all 250ms ease-in-out;
 }
+
+[data-filter]:not(.active) {opacity:.3;}
 
 /* Contrast background color */
 .label {
@@ -59,4 +61,27 @@ ul.bookmarks li a {margin-right:1em; font-size:1.1em;}
     49% {left:100%; right:0;}
     50% {right:100%; left:0;}
     80% {right:0;}
+}
+
+/*********************************
+ * Loading
+ *********************************/
+.loading {position:relative;}
+.loading:before {
+    content:""; position:absolute; top:0; left:0; right:0; bottom:0; z-index:99;
+    background-color:#fff;
+}
+.loading:after {
+    --loading-size:35px;
+    content:""; position:absolute; top:50%; left:50%; z-index:100;
+    width:var(--loading-size); height:var(--loading-size);
+    margin:calc(-0.5 * var(--loading-size)) 0 0 calc(-0.5 * var(--loading-size));
+    border-radius:50%; border:2px dashed transparent;
+    border-bottom-color:var(--color-primary);
+    border-right-color:var(--color-primary);
+    animation:spinner .6s linear infinite;
+    box-sizing:border-box;
+}
+@keyframes spinner {
+    to {transform:rotate(360deg);}
 }

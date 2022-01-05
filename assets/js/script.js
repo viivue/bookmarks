@@ -7,26 +7,72 @@ jQuery(function($){
             this.apiURL = `https://api.github.com/repos/${owner}/${repo}/`;
             this.bookmarkContainer = $('[data-container]');
             this.labelContainer = $('[data-labels]');
+            this.selectedLabels = [];
 
             // get label
             this.getLabels(response => {
                 for(const label of response){
-                    const color = hexToRgb(`#${label.color}`);
-
-                    this.labelContainer.append(`
-                       <li>
-                       <a href="#" class="label" style="--label-r:${color.r};--label-g:${color.g};--label-b:${color.b};">${label.name}</a>
-                       </li>
-                       `);
+                    this.labelContainer.append(this.getLabelItemHTML(label));
                 }
+                this.assignFilterEvent();
+
+                // get issue
+                this.getIssues(() => {
+                    $('body').removeClass('loading');
+                });
+            });
+        }
+
+        onFilterClick(label){
+            if(this.selectedLabels.includes(label)){
+                // remove
+                const index = this.selectedLabels.indexOf(label);
+                if(index > -1){
+                    this.selectedLabels.splice(index, 1);
+                }
+            }else{
+                // add
+                this.selectedLabels.push(label);
+            }
+
+
+            this.getIssues();
+        }
+
+        updateLabelStatus(){
+            if(this.selectedLabels.length < 1){
+                $('[data-filter]').addClass('active');
+            }else{
+                $('[data-filter]').each((i, e) => {
+                    const label = $(e).attr('data-filter');
+                    if(this.selectedLabels.includes(label)){
+                        $(e).addClass('active');
+                    }else{
+                        $(e).removeClass('active');
+                    }
+                });
+            }
+        }
+
+        assignFilterEvent(){
+            const $filters = $('[data-filter]:not(.assigned)');
+
+            $filters.on('click', e => {
+                this.onFilterClick($(e.target).attr('data-filter'));
             });
 
-            // get issue
-            this.getIssues('', response => {
-                for(const issue of response){
-                    this.bookmarkContainer.append(this.getBookmarkItemHTML(issue));
-                }
-            });
+            $filters.addClass('assigned');
+        }
+
+        getLabelItemHTML(labelObject){
+            const color = hexToRgb(`#${labelObject.color}`);
+            const style = `--label-r:${color.r};--label-g:${color.g};--label-b:${color.b};`;
+
+            return `
+                   <li>
+                   <a href="#" data-filter="${labelObject.name}" class="label" style="${style}">${labelObject.name}</a>
+                   </li>
+                   `;
         }
 
         getBookmarkItemHTML(issueObject){
@@ -57,15 +103,37 @@ jQuery(function($){
             return query;
         }
 
-        getIssues(labels = '', callback){
-            $.ajax(this.getQueryObject(`issues?state=closed&labels=${labels}`)).done((response, status) => {
-                callback(response);
+        getIssues(callback){
+            this.bookmarkContainer.addClass('loading');
+            $.ajax(this.getQueryObject(`issues?state=closed&labels=${this.selectedLabels.join(',')}`)).done((response, status) => {
+                // remove
+                this.bookmarkContainer.html('');
+
+                if(response.length){
+                    // new bookmark
+                    for(const issue of response){
+                        this.bookmarkContainer.append(this.getBookmarkItemHTML(issue));
+                    }
+                }else{
+                    this.bookmarkContainer.append(`<h3 style="text-align:center">No results matched your filter.</h3>`);
+                }
+
+                if(typeof callback === 'function'){
+                    callback(response);
+                }
+                this.bookmarkContainer.removeClass('loading');
             });
+
+            this.updateLabelStatus();
         }
 
         getLabels(callback){
+            this.labelContainer.addClass('loading');
             $.ajax(this.getQueryObject(`labels`)).done((response, status) => {
-                callback(response);
+                if(typeof callback === 'function'){
+                    callback(response);
+                }
+                this.labelContainer.removeClass('loading');
             });
         }
     }
