@@ -33,3 +33,25 @@ function hexToRgb(hex){
         b: parseInt(result[3], 16)
     } : null;
 }
+
+
+/**
+ * Manage object in session|local storage
+ */
+class MyStorage{
+    constructor(key){
+        this.key = key;
+    }
+
+    set(object){
+        sessionStorage.setItem(this.key, JSON.stringify(object));
+    }
+
+    get(){
+        return JSON.parse(sessionStorage.getItem(this.key));
+    }
+
+    clear(){
+        sessionStorage.removeItem(this.key);
+    }
+}

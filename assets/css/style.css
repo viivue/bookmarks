@@ -32,17 +32,17 @@ ul.labels li a {
 }
 
 /* Bookmark items */
-ul.bookmarks li {display:flex; flex-wrap:wrap; position:relative; padding-left:15px;}
+ul.bookmarks li {display:flex; flex-wrap:wrap; align-items:center; position:relative; padding-left:15px;}
 ul.bookmarks li:not(:last-child) {margin-bottom:10px;}
 ul.bookmarks li:before {
     content:""; position:absolute; top:.6em; left:0;
     width:5px; height:5px; border-radius:50%;
     background:#000; opacity:.5;
 }
-ul.bookmarks li a {margin-right:1em; font-size:1.1em;}
+ul.bookmarks li > div:not(:last-child) {margin-right:1em;}
 
 /* Button underline */
-[class*="btn_underline"] {position:relative; color:#d5af13; text-decoration:none; font-weight:600;}
+[class*="btn_underline"] {position:relative; color:#d5af13; text-decoration:none; font-weight:600; font-size:1.2em;}
 [class*="btn_underline"]:before {
     content:""; position:absolute; bottom:0; left:0; right:0;
     height:2px; border-radius:2px; background:#d5af13; opacity:0;

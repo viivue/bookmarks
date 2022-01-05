@@ -3,7 +3,7 @@ jQuery(function($){
 
     class Bookmark{
         constructor(owner, repo){
-            this.token = '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';
+            this.token = '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';
             this.apiURL = `https://api.github.com/repos/${owner}/${repo}/`;
             this.bookmarkContainer = $('[data-container]');
             this.labelContainer = $('[data-labels]');
@@ -76,13 +76,22 @@ jQuery(function($){
         }
 
         getBookmarkItemHTML(issueObject){
+            console.log(issueObject.labels)
             const url = new URL(issueObject.title);
             const title = url.host.replace('www.', '');
 
+            let labelsHTML = '';
+            const labelsArray = [];
+
+            for(const label of issueObject.labels){
+                labelsArray.push(label.name);
+                labelsHTML += `<li>[${label.name}]</li>`;
+            }
             return `
                 <li>
-                <a href="${issueObject.title}" target="_blank" class="btn_underline">${title}</a>
+                <div><a href="${issueObject.title}" target="_blank" class="btn_underline">${title}</a></div>
                 <div>${issueObject.body}</div>
+                <div>[${labelsArray.join(',')}]</div>
                 </li>
             `;
         }
@@ -92,6 +101,8 @@ jQuery(function($){
             const query = {
                 "url": url, "method": "GET", "timeout": 0, "error": (response, status) => {
                     if(DEV) console.log('getQuery', url, response, status);
+                    this.bookmarkContainer.html(`<h3>${response.responseText}</h3>`);
+                    $('.loading').removeClass('loading');
                 }
             };
 
@@ -105,7 +116,7 @@ jQuery(function($){
 
         getIssues(callback){
             this.bookmarkContainer.addClass('loading');
-            $.ajax(this.getQueryObject(`issues?state=closed&labels=${this.selectedLabels.join(',')}`)).done((response, status) => {
+            $.ajax(this.getQueryObject(`issues?state=closed&sort=updated&labels=${this.selectedLabels.join(',')}`)).done((response, status) => {
                 // remove
                 this.bookmarkContainer.html('');
 
@@ -138,5 +149,10 @@ jQuery(function($){
         }
     }
 
+
+    // load settings from storage
+    const browserStorage = new MyStorage('viivue-bookmarks');
+
+    // init
     const bookmark = new Bookmark('viivue', 'bookmarks');
 });
