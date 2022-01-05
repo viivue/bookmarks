@@ -3,7 +3,7 @@ jQuery(function($){
 
     class Bookmark{
         constructor(owner, repo){
-            this.token = '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';
+            this.token = '';
             this.apiURL = `https://api.github.com/repos/${owner}/${repo}/`;
             this.bookmarkContainer = $('[data-container]');
             this.labelContainer = $('[data-labels]');
@@ -116,7 +116,7 @@ jQuery(function($){
 
         getIssues(callback){
             this.bookmarkContainer.addClass('loading');
-            $.ajax(this.getQueryObject(`issues?state=closed&sort=updated&labels=${this.selectedLabels.join(',')}`)).done((response, status) => {
+            $.ajax(this.getQueryObject(`issues?state=closed&sort=updated&per_page=100&labels=${this.selectedLabels.join(',')}`)).done((response, status) => {
                 // remove
                 this.bookmarkContainer.html('');
 
