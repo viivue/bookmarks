@@ -70,13 +70,12 @@ jQuery(function($){
 
             return `
                    <li>
-                   <a href="#" data-filter="${labelObject.name}" class="label" style="${style}">${labelObject.name}</a>
+                   <button data-filter="${labelObject.name}" class="label" style="${style}">${labelObject.name}</button>
                    </li>
                    `;
         }
 
         getBookmarkItemHTML(issueObject){
-            console.log(issueObject.labels)
             const url = new URL(issueObject.title);
             const title = url.host.replace('www.', '');
 
@@ -90,8 +89,9 @@ jQuery(function($){
             return `
                 <li>
                 <div><a href="${issueObject.title}" target="_blank" class="btn_underline">${title}</a></div>
-                <div>${issueObject.body}</div>
+                <div>${issueObject.body ?? ''}</div>
                 <div>[${labelsArray.join(',')}]</div>
+                <div class="view-issue"><a href="${issueObject.html_url}" target="_blank">edit</a></div>
                 </li>
             `;
         }

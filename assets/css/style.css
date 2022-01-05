@@ -1,5 +1,7 @@
 * {margin:0; padding:0; box-sizing:border-box; border:none; font-family:"Source Code Pro", monospace;}
 body {font-size:16px; min-height:100vh;}
+a {text-decoration:underline; color:#000; transition:all 250ms ease-in-out;}
+a:hover, a:focus {color:#d5af13;}
 
 
 main {max-width:1024px; margin:0 auto; padding:100px 20px; position:relative; z-index:1;}
@@ -9,11 +11,6 @@ main > div:not(:last-child) {margin-bottom:50px;}
 /* Labels */
 ul.labels {list-style:none; margin:-5px; display:flex; flex-wrap:wrap; justify-content:center;}
 ul.labels li {padding:5px;}
-ul.labels li a {
-    display:flex; align-items:center; justify-content:center;
-    border-radius:40px; min-height:30px; padding:5px 15px;
-    text-decoration:none; transition:all 250ms ease-in-out;
-}
 
 [data-filter]:not(.active) {opacity:.3;}
 
@@ -29,6 +26,11 @@ ul.labels li a {
 
     background:rgb(var(--label-r), var(--label-g), var(--label-b));
     color:hsl(0, 0%, calc(var(--lightness-switch) * 100%));
+
+    display:flex; align-items:center; justify-content:center;
+    border-radius:40px; min-height:30px; padding:5px 15px;
+    text-decoration:none; transition:all 250ms ease-in-out;
+    cursor:pointer;
 }
 
 /* Bookmark items */
@@ -40,6 +42,8 @@ ul.bookmarks li:before {
     background:#000; opacity:.5;
 }
 ul.bookmarks li > div:not(:last-child) {margin-right:1em;}
+.view-issue {transition:all 100ms ease-in-out;}
+ul.bookmarks li:not(:hover) .view-issue {opacity:0;}
 
 /* Button underline */
 [class*="btn_underline"] {position:relative; color:#d5af13; text-decoration:none; font-weight:600; font-size:1.2em;}
@@ -77,8 +81,8 @@ ul.bookmarks li > div:not(:last-child) {margin-right:1em;}
     width:var(--loading-size); height:var(--loading-size);
     margin:calc(-0.5 * var(--loading-size)) 0 0 calc(-0.5 * var(--loading-size));
     border-radius:50%; border:2px dashed transparent;
-    border-bottom-color:var(--color-primary);
-    border-right-color:var(--color-primary);
+    border-bottom-color:#000;
+    border-right-color:#000;
     animation:spinner .6s linear infinite;
     box-sizing:border-box;
 }
